@@ -131,6 +131,9 @@ class SshServer implements Server
 	public function createDir($dir)
 	{
 		if (!file_exists("ssh2.sftp://$this->sftp$dir")) {
+			// ssh2_ftp_mkdir only succeeds on server I have to work with if $dir doesn't end with '/':
+			$dirNoSlash = substr($dir, -1) === '/' ? substr($dir, 0, strlen($dir)-1) : $dir;
+
 			$this->protect('ssh2_sftp_mkdir', [$this->sftp, $dir, 0777, TRUE]);
 		}
 	}
